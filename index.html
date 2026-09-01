@@ -102,22 +102,6 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#8e97b6;text-align:
 <details class="faq"><summary>Is Cash on Delivery available?</summary><p>Yes, the order form below is designed for Cash on Delivery orders.</p></details>
 </div></div></section>
 
-<section id="order"><div class="container order-wrap">
-<div class="order-info"><span class="eyebrow">🔥 ORDER NOW • COD AVAILABLE</span><h2 style="font-size:42px;line-height:1.1">Ready To Make Your Room Magical?</h2><p style="color:var(--muted)">Fill in your details and submit your order. We'll contact you to confirm the delivery.</p><div class="checks"><div>Fast order confirmation</div><div>Cash on Delivery</div><div>Secure customer details</div></div></div>
-<form class="form" id="orderForm">
-<h3>Place Your Order</h3>
-<div class="field"><label>SELECT DEAL</label><select id="deal" name="deal">
-<option value="1 Unit - Rs. 2,499">1 Unit — Rs. 2,499</option>
-<option value="2 Units - Rs. 3,499">2 Units — Rs. 3,499</option>
-<option value="3 Units - Rs. 4,499">3 Units — Rs. 4,499</option>
-</select></div>
-<div class="row"><div class="field"><label>FULL NAME</label><input name="name" required placeholder="Your name"></div><div class="field"><label>PHONE NUMBER</label><input name="phone" required inputmode="tel" placeholder="03XX XXXXXXX"></div></div>
-<div class="field"><label>FULL ADDRESS</label><textarea name="address" required rows="3" placeholder="House / street / area"></textarea></div>
-<div class="row"><div class="field"><label>CITY</label><input name="city" required placeholder="Your city"></div></div>
-<button class="btn" type="submit">Confirm Order — Cash on Delivery</button>
-<p class="note">Your information is used only to process your order.</p><div class="success" id="success">✅ Order received! We'll contact you shortly for confirmation.</div>
-</form>
-</div></section>
 </main>
 <footer>© 2026 StarryGlow. All rights reserved.</footer>
 <div class="sticky"><a class="btn" href="#order">🛒 Order StarryGlow — Rs. 2,499</a></div>
@@ -129,7 +113,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#8e97b6;text-align:
   Example: https://script.google.com/macros/s/XXXXXXXX/exec
   If left blank, the form shows a demo success message but does not send data anywhere.
 */
-const GOOGLE_SCRIPT_URL = "";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyC1Ex5LhnXK_Wosf5U6pWlVaq_FR9UnUEUPICt3OMIMwazOVNspI-I0GNIzzchmANO/exec";
 
 const form = document.getElementById("orderForm");
 form.addEventListener("submit", async (e) => {
@@ -162,48 +146,6 @@ form.addEventListener("submit", async (e) => {
 });
 </script>
 
-<script>
-(function () {
-  const form = document.querySelector('#order form') || document.querySelector('form');
-  if (!form) return;
-
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const btn = form.querySelector('button[type="submit"]');
-    const originalText = btn ? btn.textContent : '';
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Placing Order...';
-    }
-
-    const fd = new FormData(form);
-
-    // Ensure the product is always recorded.
-    if (!fd.get('product')) {
-      fd.append('product', 'StarryGlow 2-in-1 Star Projector Night Light');
-    }
-
-    try {
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: fd
-      });
-
-      form.reset();
-      alert('Order placed successfully! We will contact you shortly.');
-    } catch (err) {
-      alert('Order could not be submitted. Please try again.');
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = originalText || 'Place Order';
-      }
-    }
-  });
-})();
-</script>
 
 </body>
 </html>
