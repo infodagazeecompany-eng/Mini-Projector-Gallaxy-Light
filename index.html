@@ -161,5 +161,49 @@ form.addEventListener("submit", async (e) => {
   }
 });
 </script>
+
+<script>
+(function () {
+  const form = document.querySelector('#order form') || document.querySelector('form');
+  if (!form) return;
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn ? btn.textContent : '';
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Placing Order...';
+    }
+
+    const fd = new FormData(form);
+
+    // Ensure the product is always recorded.
+    if (!fd.get('product')) {
+      fd.append('product', 'StarryGlow 2-in-1 Star Projector Night Light');
+    }
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: fd
+      });
+
+      form.reset();
+      alert('Order placed successfully! We will contact you shortly.');
+    } catch (err) {
+      alert('Order could not be submitted. Please try again.');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = originalText || 'Place Order';
+      }
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
