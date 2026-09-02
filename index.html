@@ -330,6 +330,31 @@ form.addEventListener("submit", async (e) => {
         body: new URLSearchParams(data).toString()
       });
     }
+
+    // TikTok: track the completed order submission with product/value details.
+    // This removes the missing content_id warning in Events Manager.
+    if (window.ttq && typeof window.ttq.track === "function") {
+      const dealText = data.deal || "1 Unit - Rs. 2,499";
+      const priceMatch = dealText.match(/[0-9,]+/g);
+      const price = priceMatch && priceMatch.length ? Number(priceMatch[priceMatch.length - 1].replace(/,/g, "")) : 2499;
+      const qtyMatch = dealText.match(/^(\d+)/);
+      const quantity = qtyMatch ? Number(qtyMatch[1]) : 1;
+
+      ttq.track("PlaceAnOrder", {
+        contents: [{
+          content_id: "starryglow-2in1-projector",
+          content_name: "StarryGlow 2-in-1 Star Projector Night Light",
+          content_type: "product",
+          quantity: quantity,
+          price: price
+        }],
+        content_id: "starryglow-2in1-projector",
+        content_type: "product",
+        value: price,
+        currency: "PKR"
+      });
+    }
+
     const success = document.getElementById("success");
     success.classList.add("show");
     success.textContent = "✅ Order Placed Successfully! We'll contact you shortly for confirmation.";
