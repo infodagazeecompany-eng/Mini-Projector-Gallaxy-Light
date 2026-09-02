@@ -48,16 +48,16 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#8e97b6;text-align:
 @media(max-width:850px){.hero-grid,.offer-grid,.order-wrap{grid-template-columns:1fr}.features{grid-template-columns:1fr 1fr}.reviews,.steps{grid-template-columns:1fr}.gallery{grid-template-columns:1fr 1fr}.gallery img:first-child{grid-column:span 2}.nav a{display:none}.hero{padding-top:35px}.sticky{display:block}.hero-actions .btn{flex:1}.order-info{padding:0}.offer{padding:25px}}
 @media(max-width:520px){.features{grid-template-columns:1fr}.gallery{grid-template-columns:1fr}.gallery img:first-child{grid-column:auto}.row{grid-template-columns:1fr}.hero h1{font-size:43px}.hero p{font-size:16px}}
 
-/* Extra-highlighted order notification */
+/* Top-right sample order notification */
 .order-notification{
-  position:fixed;left:18px;bottom:20px;z-index:99999;
+  position:fixed;right:18px;top:88px;left:auto;bottom:auto;z-index:99999;
   width:min(380px,calc(100vw - 28px));box-sizing:border-box;
   background:linear-gradient(135deg,rgba(31,18,58,.98),rgba(9,8,18,.98));
   color:#fff;border:1px solid rgba(190,140,255,.45);
   border-radius:18px;padding:15px 17px 15px 15px;
   box-shadow:0 14px 45px rgba(0,0,0,.55),0 0 35px rgba(150,80,255,.38);
   display:flex;gap:13px;align-items:center;
-  opacity:0;transform:translateY(35px) scale(.9);
+  opacity:0;transform:translateY(-25px) scale(.92);
   transition:opacity .45s ease,transform .55s cubic-bezier(.17,.89,.32,1.28);
   pointer-events:none;font-family:inherit;overflow:hidden;
 }
@@ -160,22 +160,29 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#8e97b6;text-align:
 </div>
 <script>
 (function(){
-  const names = ["Ahmed","Usman","Ali","Hamza","Bilal"];
+  // Demo/sample notifications — each appears once only, then stops.
+  const notices = [
+    {name:"Ahmed", time:"5 minutes ago"},
+    {name:"Usman", time:"30 minutes ago"},
+    {name:"Ali", time:"1 hour ago"}
+  ];
   const box = document.getElementById("orderNotification");
   const text = document.getElementById("onText");
   const time = document.getElementById("onTime");
   if(!box) return;
-  let i = 0, minutes = 1;
-  function show(){
-    text.textContent = names[i] + " just placed an order";
-    time.textContent = minutes + (minutes === 1 ? " minute ago" : " minutes ago");
+  let i = 0;
+  function showNext(){
+    if(i >= notices.length) return;
+    text.textContent = notices[i].name + " just placed an order";
+    time.textContent = notices[i].time;
     box.classList.add("show");
-    setTimeout(()=>box.classList.remove("show"),4500);
-    i = (i + 1) % names.length;
-    minutes = minutes >= 5 ? 1 : minutes + 1;
+    setTimeout(()=>{
+      box.classList.remove("show");
+      i++;
+      if(i < notices.length) setTimeout(showNext, 7000);
+    }, 4500);
   }
-  setTimeout(show,1500);
-  setInterval(show,8000);
+  setTimeout(showNext, 1500);
 })();
 </script>
 
