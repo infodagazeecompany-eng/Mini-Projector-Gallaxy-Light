@@ -40,7 +40,9 @@ section{padding:70px 0}.section-head{text-align:center;max-width:720px;margin:0 
 .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.stars{color:#ffd76a;letter-spacing:2px}.review p{color:#d7dcf0}.review small{color:#8993b8}
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.step{position:relative;background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:20px;padding:25px}.num{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#a24cff);font-weight:900}
 .faqs{max-width:820px;margin:auto;display:grid;gap:10px}.faq summary{cursor:pointer;font-weight:800}.faq p{color:var(--muted);margin-bottom:0}
-.order-wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:25px;align-items:start;scroll-margin-top:85px}.order-info{padding:25px}.form{background:linear-gradient(180deg,#11183e,#080c22);border:1px solid var(--line);border-radius:24px;padding:25px}.form h3{margin-top:0;font-size:25px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:13px}.field label{display:block;font-size:12px;color:#c2c9e2;margin-bottom:6px;font-weight:700}.field input,.field select,.field textarea{width:100%;background:#070b20;border:1px solid #252e59;color:#fff;padding:13px 14px;border-radius:11px;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#7963ff}.form .btn{width:100%;margin-top:5px}.note{font-size:11px;color:#7f89ac;text-align:center;margin:10px 0 0}.success{display:none;margin-top:12px;padding:13px;border-radius:11px;background:rgba(55,220,165,.1);border:1px solid rgba(55,220,165,.25);color:#8cf2ce;font-size:13px}
+.order-wrap{display:grid;grid-template-columns:.85fr 1.15fr;gap:25px;align-items:start;scroll-margin-top:85px}.order-info{padding:25px}.form{background:linear-gradient(180deg,#11183e,#080c22);border:1px solid var(--line);border-radius:24px;padding:25px}.form h3{margin-top:0;font-size:25px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:13px}.field label{display:block;font-size:12px;color:#c2c9e2;margin-bottom:6px;font-weight:700}.field input,.field select,.field textarea{width:100%;background:#070b20;border:1px solid #252e59;color:#fff;padding:13px 14px;border-radius:11px;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#7963ff}.form .btn{width:100%;margin-top:5px}.note{font-size:11px;color:#7f89ac;text-align:center;margin:10px 0 0}.success{display:none;margin-top:12px;padding:15px;border-radius:12px;background:rgba(55,220,165,.1);border:1px solid rgba(55,220,165,.3);color:#8cf2ce;font-size:14px;font-weight:800;text-align:center}
+.success.show{display:block;animation:orderPop .25s ease}
+@keyframes orderPop{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 footer{border-top:1px solid var(--line);padding:30px 0;color:#8e97b6;text-align:center;font-size:13px}
 .sticky{display:none;position:fixed;bottom:12px;left:12px;right:12px;z-index:30}.sticky .btn{width:100%}
 @media(max-width:850px){.hero-grid,.offer-grid,.order-wrap{grid-template-columns:1fr}.features{grid-template-columns:1fr 1fr}.reviews,.steps{grid-template-columns:1fr}.gallery{grid-template-columns:1fr 1fr}.gallery img:first-child{grid-column:span 2}.nav a{display:none}.hero{padding-top:35px}.sticky{display:block}.hero-actions .btn{flex:1}.order-info{padding:0}.offer{padding:25px}}
@@ -79,6 +81,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;color:#8e97b6;text-align:
 <div class="row"><div class="field"><label>FULL NAME</label><input name="name" required placeholder="Your name"></div><div class="field"><label>PHONE NUMBER</label><input name="phone" required inputmode="tel" placeholder="03XX XXXXXXX"></div></div>
 <div class="field"><label>FULL ADDRESS</label><textarea name="address" required rows="3" placeholder="House / street / area"></textarea></div>
 <div class="row"><div class="field"><label>CITY</label><input name="city" required placeholder="Your city"></div></div>
+<div class="field"><label>LANDMARK / NEARBY FAMOUS PLACE</label><input name="landmark" placeholder="e.g. Near Tariq Road / ABC Masjid"></div>
 <button class="btn" type="submit">Confirm Order — Cash on Delivery</button>
 <p class="note">Your information is used only to process your order.</p><div class="success" id="success">✅ Order received! We'll contact you shortly for confirmation.</div>
 </form>
@@ -153,10 +156,19 @@ form.addEventListener("submit", async (e) => {
         body: new URLSearchParams(data).toString()
       });
     }
-    document.getElementById("success").style.display = "block";
-    form.reset();
-    btn.textContent = "Order Submitted ✓";
-    setTimeout(()=>{btn.disabled=false;btn.textContent="Confirm Order — Cash on Delivery"},3500);
+    const success = document.getElementById("success");
+    success.classList.add("show");
+    success.textContent = "✅ Order Placed Successfully! We'll contact you shortly for confirmation.";
+    btn.textContent = "Order Placed ✓";
+
+    // Keep the confirmation visible for 5 seconds, then reset everything.
+    setTimeout(() => {
+      form.reset();
+      success.classList.remove("show");
+      success.textContent = "✅ Order received! We'll contact you shortly for confirmation.";
+      btn.disabled = false;
+      btn.textContent = "Confirm Order — Cash on Delivery";
+    }, 5000);
   } catch(err) {
     btn.disabled=false;
     btn.textContent="Try Again";
